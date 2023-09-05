@@ -9,7 +9,7 @@ public class Conexion {
     public Connection conexion() {
         try {
             Class.forName("com.mysql.jdbc.Driver"); // Registra el drive de conexion para la bd
-            cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/baseimportadoraespinoza","root",""); // se utiliza la libreria que se impo
+            cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/baseimportadoraespinoza","root123","delunoalocho"); // se utiliza la libreria que se impo
         // Este método crea un objeto Connection, que se utiliza para crear sentencias SQL, 
         //enviarlas a la base de datos y procesar los resultados.
                                                                                     

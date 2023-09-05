@@ -21,8 +21,8 @@ public class ConnectionGUI extends javax.swing.JFrame {
     private static final String server = "localhost:3306";
     private static final String database = "baseImportadoraEspinoza";
     private static final String url="jdbc:mysql://"+server+"/"+database;
-    private static final String user="root";
-    private static final String pass="";
+    private static final String user="root123";
+    private static final String pass="delunoalocho";
     
     
     // Funcion que va conectarse a mi bd de mysql
