@@ -41,18 +41,32 @@ public class App {
             props.load(new FileInputStream("recursos/appconfig.properties"));
             this.iv=props.getProperty("servidor.iv");
             this.key=props.getProperty("servidor.key");
-            this.ip = decrypt(this.key, this.iv, props.getProperty("servidor.ip"));
+            this.ip = decrypt2(this.key, this.iv, props.getProperty("servidor.ip"));
             
-            System.out.println("kkkkk"+this.ip);
-            this.usuario = decrypt(this.key, this.iv,props.getProperty("servidor.usuario"));
-            this.clave= decrypt(this.key, this.iv,props.getProperty("servidor.clave"));
+            this.usuario = decrypt2(this.key, this.iv,props.getProperty("servidor.usuario"));
+            this.clave= props.getProperty("servidor.clave");
             this.bd=props.getProperty("servidor.bd");  
-            System.out.println("aaa"+props.getProperty("servidor.ip"));
         }catch(IOException ex){
             System.out.println("Error: "+ex);
         }
     } 
+    public static String decrypt2(String llave, String iv, String encrypted) throws Exception {
+        byte[] privateKeyBytes = Base64.getDecoder().decode(llave);
+        // Crea una especificación de clave privada PKCS#8
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+        // Obtiene un objeto KeyFactory y crea la clave privada
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+        byte[] encryptedData = Base64.getDecoder().decode(encrypted);
+        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWITHSHA-1ANDMGF1PADDING");
+        cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
+        // Descifra los datos
+        byte[] decryptedData = cipher.doFinal(encryptedData);
+
+        return new String(decryptedData);
+
+    }
     public String getIp() {
         return ip;
     }
