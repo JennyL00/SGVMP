@@ -32,7 +32,7 @@ public class App {
     private String iv="";
     //descencriptar
     private final static String alg="AES";
-    private final static String type_cyph="AES/CBC/PKCS5Padding";
+    //private final static String type_cyph="AES/CBC/PKCS5Padding";
     
     public App()throws Exception{
         try{
@@ -115,7 +115,7 @@ public class App {
         this.iv = iv;
     }
     
-    public static String decrypt(String llave, String iv, String encrypted)throws Exception{
+    /*public static String decrypt(String llave, String iv, String encrypted)throws Exception{
         Cipher cipher = Cipher.getInstance(type_cyph);
         SecretKeySpec secretKeySpec = new SecretKeySpec(llave.getBytes(), alg);
         IvParameterSpec ivParameterSpec = new IvParameterSpec(iv.getBytes());
@@ -123,7 +123,7 @@ public class App {
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
         byte[] decrypted = cipher.doFinal(enc);
         return new String(decrypted);
-    }
+    }*/
     
     public static String decodeTextBase64(String texto)throws UnsupportedEncodingException{
         byte[] decoded = Base64.getDecoder().decode(texto);
