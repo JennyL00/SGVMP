@@ -83,6 +83,8 @@ public class ActualizarDatoCliente extends javax.swing.JFrame {
                 case "Estado":
                     txtActual.setText(datos[7]);
                     break;
+                default:
+                    break;
             }
         } catch (SQLException e) {
 
@@ -175,6 +177,8 @@ public class ActualizarDatoCliente extends javax.swing.JFrame {
                         dispose();
                         //------------------------------------------------------
                     }
+                    break;
+                default:
                     break;
             }
 

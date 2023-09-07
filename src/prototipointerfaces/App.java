@@ -36,12 +36,12 @@ public class App {
     private String bd = "";
     private String key;
     private String iv="";
-    
+    private FileInputStream input;
     public App()throws Exception{
         try{
             Properties props = new Properties();
             //Cargar archivo properties
-            FileInputStream input =new FileInputStream("recursos/appconfig.properties");
+            input =new FileInputStream("recursos/appconfig.properties");
             props.load(input);
             this.key=props.getProperty("servidor.key");
             this.ip = decrypt2(this.key, props.getProperty("servidor.ip"));
@@ -50,10 +50,11 @@ public class App {
             //descencriptar cuando la clave se ponga encriptada
             this.clave= props.getProperty("servidor.clave");
             this.bd=props.getProperty("servidor.bd");  
-            //cerrar el archivo
-            input.close();
         }catch(IOException ex){
             System.out.println("Error: "+ex);
+        }finally {
+            //cerrar el archivo
+            input.close();
         }
     } 
     
