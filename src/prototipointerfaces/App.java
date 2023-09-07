@@ -7,10 +7,16 @@ package prototipointerfaces;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.SecureRandom;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 import java.util.Properties;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -30,27 +36,28 @@ public class App {
     private String bd = "";
     private String key;
     private String iv="";
-    //descencriptar
-    private final static String alg="AES";
-    //private final static String type_cyph="AES/CBC/PKCS5Padding";
     
     public App()throws Exception{
         try{
             Properties props = new Properties();
             //Cargar archivo properties
-            props.load(new FileInputStream("recursos/appconfig.properties"));
-            this.iv=props.getProperty("servidor.iv");
+            FileInputStream input =new FileInputStream("recursos/appconfig.properties");
+            props.load(input);
             this.key=props.getProperty("servidor.key");
-            this.ip = decrypt2(this.key, this.iv, props.getProperty("servidor.ip"));
+            this.ip = decrypt2(this.key, props.getProperty("servidor.ip"));
             
-            this.usuario = decrypt2(this.key, this.iv,props.getProperty("servidor.usuario"));
+            this.usuario = decrypt2(this.key,props.getProperty("servidor.usuario"));
+            //descencriptar cuando la clave se ponga encriptada
             this.clave= props.getProperty("servidor.clave");
             this.bd=props.getProperty("servidor.bd");  
+            //cerrar el archivo
+            input.close();
         }catch(IOException ex){
             System.out.println("Error: "+ex);
         }
     } 
-    public static String decrypt2(String llave, String iv, String encrypted) throws Exception {
+    
+    public static String decrypt2(String llave,String encrypted) throws Exception {
         byte[] privateKeyBytes = Base64.getDecoder().decode(llave);
         // Crea una especificación de clave privada PKCS#8
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
@@ -60,13 +67,13 @@ public class App {
         byte[] encryptedData = Base64.getDecoder().decode(encrypted);
         Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWITHSHA-1ANDMGF1PADDING");
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-
         // Descifra los datos
         byte[] decryptedData = cipher.doFinal(encryptedData);
 
         return new String(decryptedData);
 
     }
+
     public String getIp() {
         return ip;
     }
@@ -113,20 +120,5 @@ public class App {
 
     public void setIv(String iv) {
         this.iv = iv;
-    }
-    
-    /*public static String decrypt(String llave, String iv, String encrypted)throws Exception{
-        Cipher cipher = Cipher.getInstance(type_cyph);
-        SecretKeySpec secretKeySpec = new SecretKeySpec(llave.getBytes(), alg);
-        IvParameterSpec ivParameterSpec = new IvParameterSpec(iv.getBytes());
-        byte[] enc = Base64.getDecoder().decode(encrypted);
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
-        byte[] decrypted = cipher.doFinal(enc);
-        return new String(decrypted);
-    }*/
-    
-    public static String decodeTextBase64(String texto)throws UnsupportedEncodingException{
-        byte[] decoded = Base64.getDecoder().decode(texto);
-        return new String(decoded);
     }
 }

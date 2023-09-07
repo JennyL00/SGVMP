@@ -9,6 +9,9 @@ package Conexion;
 import com.sun.jdi.connect.spi.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import prototipointerfaces.App;
 
 /**
  *
@@ -18,18 +21,21 @@ public class ConnectionGUI extends javax.swing.JFrame {
     private static Connection con;
     // Declaramos los datos de conexion a la bd
     private static final String driver="com.mysql.jdbc.Driver";
-    private static final String server = "localhost:3306";
     private static final String database = "baseImportadoraEspinoza";
-    private static final String url="jdbc:mysql://"+server+"/"+database;
-    private static final String user="root123";
-    private static final String pass="delunoalocho";
+    private static String url="";
+    private static String user="";
+    private static String pass="";
     
     
     // Funcion que va conectarse a mi bd de mysql
-    public void conector() {
+    public void conector() throws Exception {
         // Reseteamos a null la conexion a la bd
         con=null;
         try{
+            App app = new App();
+            url="jdbc:mysql://"+ app.getIp() +":3306/"+app.getBd();
+            user=app.getUsuario();
+            pass=app.getClave();
             Class.forName("com.mysql.jdbc.Driver");
             // Nos conectamos a la bd
             con= (Connection) DriverManager.getConnection(url, user, pass);
@@ -39,7 +45,7 @@ public class ConnectionGUI extends javax.swing.JFrame {
             }
         }
         // Si la conexion NO fue exitosa mostramos un mensaje de error
-        catch (ClassNotFoundException | SQLException e){
+        catch (ClassNotFoundException | SQLException e ){
             jLabel1.setText("Error de conexion" + e);
         }
     }
@@ -99,8 +105,12 @@ public class ConnectionGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
-        // TODO add your handling code here:
-        conector();
+        try {
+            // TODO add your handling code here:
+            conector();
+        } catch (Exception ex) {
+            Logger.getLogger(ConnectionGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnConectarActionPerformed
 
     /**
