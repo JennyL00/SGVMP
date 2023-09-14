@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  * @author santiago
  */
 public class Login extends javax.swing.JFrame {
-
+    private int flag=3;
     /**
      * Creates new form Login
      */
@@ -174,10 +174,15 @@ public class Login extends javax.swing.JFrame {
             } else {
                 String tipo = String.valueOf(cmbTipo.getSelectedItem());
                 if (!estaRegistrado(usuario, pass, tipo)) {
-                    JOptionPane.showMessageDialog(null, "Usuario o Password incorrectos - Intente nuevamente", "Error", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Usuario o Password incorrectos - Intente nuevamente \n Número de intentos restantes: "+(flag-1), "Error", JOptionPane.WARNING_MESSAGE);
                     txtUsuario.setText("");
                     txtPassword.setText("");
                     cmbTipo.setSelectedIndex(0);
+                    flag=flag-1;
+                    if(flag<=0){
+                        JOptionPane.showMessageDialog(null, "Numero de intentos finalizados", "Error", JOptionPane.WARNING_MESSAGE);
+                        System.exit(0);
+                    }
                 } else {
                     switch (tipo) {
                         case "Gerente General":
